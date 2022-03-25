@@ -17,9 +17,9 @@ Adafruit_FreeTouch qt_1 = Adafruit_FreeTouch(1, OVERSAMPLE_4, RESISTOR_50K, FREQ
 Adafruit_FreeTouch qt_2 = Adafruit_FreeTouch(2, OVERSAMPLE_4, RESISTOR_50K, FREQ_MODE_NONE);
 
 Adafruit_APDS9960 apds;
-int paused=0;
-int rewinded=0;
-int brightness=0;
+int action=0;
+int counter=0;
+
 uint16_t prox=0;
 
 void setup() {
@@ -74,41 +74,47 @@ void loop() {
 
 
     //set LED brightness
-    if (prox <= 50){ // ignore readings up to 10
-      brightness=50;
-    } else {
-      brightness=prox;
+    if (prox <= 2){ // ignore readings up to 2
+      prox=0;
     }
-    strip.setBrightness(brightness-50);
+    strip.setBrightness(prox);
 
-    //pause video if state has changed
-    if(prox<150 && paused==0){
-      Keyboard.write('K');
-      paused=1;
-    }
-
-    //rewind video if close enough
-    if(prox>=150 && rewinded==0){
-      Keyboard.write('J');
-      rewinded=1;
-    }
+    counter++;
+    Serial.print("Counter: ");
+    Serial.println(counter);
     
+    //functions
+    if(counter>=30 && action==0) {
+      if(prox<50){
+        //rewind video
+        Keyboard.write('J');
+      } else if (prox<200){
+        //pause video
+        Keyboard.write('K');
+      } else {
+        //forward video
+        Keyboard.write('L');
+      }
+      action=1;
+    }
+
     //clear the interrupt
     apds.clearInterrupt();
     
   } else {
-    rewinded=0;
-    paused=0;
+    action=0;
+    counter=0;
     strip.setBrightness(0);
   }
 
   //set LED colors
-  if(prox < 150) {
-   strip.fill(0x5466ff);
-  } else {
+  if(prox<50) {
+   strip.fill(0xff00e8);
+  } else if(prox<500) {
    strip.fill(0x54ffa2);
+  } else {
+    strip.fill(0x6e21ff);
   }
- 
   strip.show();
 
   // measure the captouches
@@ -128,18 +134,4 @@ void loop() {
   }
 
   delay(10);
-}
-
-// Input a value 0 to 255 to get a color value.
-// The colours are a transition r - g - b - back to r.
-uint32_t Wheel(byte WheelPos) {
-  if(WheelPos < 85) {
-   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-  } else if(WheelPos < 170) {
-   WheelPos -= 85;
-   return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-  } else {
-   WheelPos -= 170;
-   return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-  }
 }
