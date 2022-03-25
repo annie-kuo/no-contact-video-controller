@@ -110,7 +110,7 @@ void loop() {
   //set LED colors
   if(prox<50) {
    strip.fill(0xff00e8);
-  } else if(prox<500) {
+  } else if(prox<200) {
    strip.fill(0x54ffa2);
   } else {
     strip.fill(0x6e21ff);
