@@ -10,6 +10,7 @@ This program allows the user to control YouTube videos using a proximity sensor.
 - To pause the video, hover your hand over the sensor about 10cm away.
 - To forward the video, hover your hand over the sensor about 5cm away.
 - The LED lights light up in different colors according to the function used: pink for rewind, cyan for pause, and purple for forward.
+- The LED lights get brighter as the user gets closer to the sensor.
 
 # Details
 This code is meant to be uploaded onto a proximity sensor. The model of the board used is the *Adafruit Proximity Trinkey - USB APDS9960 Sensor Dev Board*. A template code from *Kattni Rembor* was used and then modified to include the above features.
