@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+
 #include <Adafruit_NeoPixel.h>
 #include "Adafruit_FreeTouch.h"
 #include "Adafruit_APDS9960.h"
@@ -80,15 +81,13 @@ void loop() {
     strip.setBrightness(prox);
 
     counter++;
-    Serial.print("Counter: ");
-    Serial.println(counter);
     
     //functions
     if(counter>=30 && action==0) {
-      if(prox<50){
+      if(prox<25){
         //rewind video
         Keyboard.write('J');
-      } else if (prox<200){
+      } else if (prox<215){
         //pause video
         Keyboard.write('K');
       } else {
@@ -108,9 +107,9 @@ void loop() {
   }
 
   //set LED colors
-  if(prox<50) {
+  if(prox<25) {
    strip.fill(0xff00e8);
-  } else if(prox<200) {
+  } else if(prox<215) {
    strip.fill(0x54ffa2);
   } else {
     strip.fill(0x6e21ff);
